@@ -1,0 +1,47 @@
+# backend/app/main.py
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+
+from .database import init_db
+from .routers.antartida import router as antartida_router
+from .config import get_settings
+
+settings = get_settings()
+
+# Crear aplicación FastAPI
+app = FastAPI(
+    title="AEMET Antártida API",
+    description="API para datos meteorológicos de estaciones antárticas de AEMET",
+    version="0.1.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
+
+# Middleware CORS (útil si el frontend está en otro dominio)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],                    # En producción restringe a tu dominio
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Incluir routers
+app.include_router(antartida_router)
+
+# Evento de startup
+@app.on_event("startup")
+async def startup_event():
+    init_db()                                   # Crear tablas si no existen
+    print(f"🚀 API iniciada en modo {settings.ENVIRONMENT}")
+
+
+# Health check básico
+@app.get("/health", tags=["Health"])
+async def health_check():
+    return {"status": "healthy", "environment": settings.ENVIRONMENT}
+
+
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
