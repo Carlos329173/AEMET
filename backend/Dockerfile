@@ -9,6 +9,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copiar requirements primero → mejor cacheo de capas
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
