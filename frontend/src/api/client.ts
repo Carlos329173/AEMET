@@ -1,7 +1,8 @@
 import axios from 'axios'
+import type { Measurement } from '../types'
 
 const api = axios.create({
-  baseURL: '/api',          // proxied por vite → backend:8000
+  baseURL: '/api', // proxied por vite → backend:8000
 })
 
 export interface QueryParams {
