@@ -1,5 +1,6 @@
 import { QueryForm } from './components/QueryForm'
 import { DataTable } from './components/DataTable'
+//import DataTable from './components/DataTable.tsx';          // explícito con extensión
 import { TimeSeriesChart } from './components/TimeSeriesChart'
 import { Measurement } from './types'
 
